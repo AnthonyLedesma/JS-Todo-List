@@ -1,10 +1,32 @@
 <!doctype html>
 <html>
   <head>
+    
     <title>JS Todo List</title>
-
+    <meta charset="UTF-8">  
   </head>
   <body>
+    <div>
+      <ul id="ToDoList">
+
+      </ul>
+
+      <ul id="DoneList">
+
+      </ul>
+      <button id="NewToDo">New To-Do Item</button>
+      <button id="ClearLocalStorage">Clear Local Storage</button>
+    </div>
+
+    <div id="NewFormDiv" style="display: none;">
+        <form>
+            Item Title:<br>
+            <input type="text" name="ItemTitle" id="ItemName"><br>
+            Description:<br>
+            <input type="text" name="Description" id="ItemDescription"><br><br>
+            <input type="button" value="Submit" target="#" id="GenerateButton">
+          </form> 
+    </div>
     <script src="./main.js"></script>
   </body>
 </html>
