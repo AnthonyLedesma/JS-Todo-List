@@ -18,5 +18,6 @@ module.exports = {
         options: '$'
       }]
     }]
-  }
+  },
+  performance: { hints: false }
 };

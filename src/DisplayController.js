@@ -10,8 +10,3 @@ $('#NewToDo').click(function() {
 
 })
 
-$('#ClearLocalStorage').click(function() {
-    if (localStorage.getItem('ToDoArray')) {
-        localStorage.clear();
-    }
-})
