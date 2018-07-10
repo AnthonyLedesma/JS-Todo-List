@@ -8,6 +8,8 @@ $('#DoneList').append("<li>This item is done</li>");
 
 //import ToDoArray from 'index.js';
 import DOMPurify from 'dompurify';
+import UIkit from 'uikit';
+import { format } from 'date-fns';
 
 $('#NewToDo').click(function() {
     $('#NewFormDiv').show();
@@ -15,20 +17,29 @@ $('#NewToDo').click(function() {
 })
 
 
-
+/*
+|
+| 
+|
+|
+|
+|
+|
+*/
 const render = (ToDoArray) => {
     let parentClass = "uk-grid-small uk-child-width-expand@s uk-text-center uk-flex";
     let badgeClass = "uk-card-badge";
     let bodyPriorityClass = '';
+    let priorityState = '';
     let gridClass = "uk-grid-small uk-child-width-expand@s uk-text-center uk-flex";
     let editClass = "uk-button uk-button-text uk-align-right";
 
     preRenderClear();
     ToDoArray.forEach((element,index) => {
 
-        if (parseInt(element.priority) === 0) {bodyPriorityClass = "uk-card uk-card-default uk-card-body uk-card-hover uk-margin";}
-        else if (parseInt(element.priority) === 1) {bodyPriorityClass = "uk-card uk-card-primary uk-card-body uk-card-hover uk-margin";}
-        else if (parseInt(element.priority) === 2) {bodyPriorityClass = "uk-card uk-card-secondary uk-card-body uk-card-hover uk-margin";}
+        if (parseInt(element.priority) === 0) {bodyPriorityClass = "uk-card uk-card-default uk-card-body uk-card-hover uk-margin";priorityState = "Low";}
+        else if (parseInt(element.priority) === 1) {bodyPriorityClass = "uk-card uk-card-primary uk-card-body uk-card-hover uk-margin";priorityState = "Normal";}
+        else if (parseInt(element.priority) === 2) {bodyPriorityClass = "uk-card uk-card-secondary uk-card-body uk-card-hover uk-margin";priorityState = "High";}
         $('#ToDoList').append(`
         <div class="${gridClass}">
             <div>
@@ -38,7 +49,7 @@ const render = (ToDoArray) => {
                         <h3 id="item-title-${index}" class="uk-card-title">${element.title}</h3>
                         <p id="description-tag-${index}">${element.description}</p>
                         <p id="notes-tag-${index}">${element.notes}</p>
-                        <p id="priority-tag-${index}">Priority ${element.priority}</p>
+                        <p id="priority-tag-${index}">Priority ${priorityState}</p>
                         <div id="edit-${index}" class="${editClass}" uk-toggle="target: #modal${index}">Edit</div>
                     </div>
                 </div>
