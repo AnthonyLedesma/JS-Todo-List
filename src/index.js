@@ -10,7 +10,7 @@ import DOMPurify from 'dompurify';
 import UIkit from 'uikit';
 import Icons from 'uikit/dist/js/uikit-icons';
 import { format } from 'date-fns';
-import datepicker from 'jquery-ui/ui/widgets/datepicker';
+import 'jquery-ui/ui/widgets/datepicker';
 
 // loads the Icon plugin
 UIkit.use(Icons);
@@ -49,11 +49,21 @@ $('#GenerateButton').click(function() {
     
     x.title = DOMPurify.sanitize($('#ItemName').val(), {ALLOWED_TAGS: ['b']});
     x.description = DOMPurify.sanitize($('#ItemDescription').val(), {ALLOWED_TAGS: ['b']});
-    x.createdDate = format(new Date(), 'MM/DD/YYYY h A');
+    x.createdDate = format(new Date(), 'MM/DD/YYYY');
+    x.dueDate = format($('#datepicker').val(), 'MM/DD/YYYY');
+    x.priority = $('input[name="newItem"]:checked').attr('data-priority');
+    x.notes = DOMPurify.sanitize($('#ItemNotes').val(), {ALLOWED_TAGS: ['b']});
+
     ToDoArray.push(x);
     localStorage.setItem('ToDoArray', JSON.stringify(ToDoArray));
     //$('#NewFormDiv').hide();
     render(ToDoArray);
+
+    $('#ItemName').val("");
+    $('#ItemDescription').val("");
+    $('#datepicker').val("");
+    $('#ItemNotes').val("");
+    $('input[name="newItem"][data-priority="0"]').prop('checked', true);
 })
 
 render(ToDoArray);
@@ -70,6 +80,8 @@ $('#ClearLocalStorage').click(function() {
     ToDoArray = [];
 })
 
+$('#datepicker').datepicker();
 
-$("#datepicker").datepicker();
   
+
+ 

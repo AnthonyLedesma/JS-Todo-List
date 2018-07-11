@@ -37,7 +37,7 @@ const render = (ToDoArray) => {
             <div>
                 <div class="${parentClass}">
                     <div class="${bodyPriorityClass}">
-                        <div id="date-badge-${index}" class="${badgeClass}">Created: ${element.createdDate}<br />Edited: ${element.editedDate}</div>
+                        <div id="date-badge-${index}" class="${badgeClass}">Created: ${element.createdDate}<br />Edited: ${element.editedDate}<br  />Due: ${element.dueDate}</div>
                         <h3 id="item-title-${index}" class="uk-card-title">${element.title}</h3>
                         <p id="description-tag-${index}">${element.description}</p>
                         <p id="notes-tag-${index}">${element.notes}</p>
@@ -49,31 +49,75 @@ const render = (ToDoArray) => {
         </div>`
         );
         
-        $('body').append(`<div data-modal='true' id="modal${index}" uk-modal><div class="uk-modal-dialog uk-modal-body">
-            <h2 class="uk-modal-title">${element.title}</h2>
-            <span class="uk-label">Title</span><input class="uk-form-small uk-input" type="text" id="ItemName${index}" value="${element.title}">
-            <span class="uk-label">Description</span><textarea class="uk-textarea" id="ItemDescription${index}">${element.description}</textarea>
-            <span class="uk-label">Notes</span><textarea class="uk-textarea" id="ItemNotes${index}">${element.notes}</textarea>
-            <span class="uk-label">Priority</span><div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
-                <label><input class="uk-radio" type="radio" name="radio${index}" data-value="0"> Low</label>
-                <label><input class="uk-radio" type="radio" name="radio${index}" data-value="1"> Normal</label>
-                <label><input class="uk-radio" type="radio" name="radio${index}" data-value="2"> High</label>
+        $('#modal-overflow').append(`
+        <div data-modal='true' id="modal${index}" uk-modal>
+            <div class="uk-modal-dialog">
+                <div class="uk-modal-header"><h2 class="uk-modal-title">${element.title}</h2></div>
+                <div class="uk-modal-body">
+                    <button class="uk-modal-close-default" type="button" uk-close></button>
+                    <form>
+                        <div class="uk-grid-small" uk-grid>
+                            <div class="uk-width-1-2@s">
+                                <span class="uk-label">Title</span><input class="uk-input" type="text" id="ItemName${index}" value="${element.title}">
+                                <span class="uk-label">Description</span><input class="uk-input" type="text" id="ItemDescription${index}" value="${element.description}">
+                            </div>
+                            <div class="uk-width-1-2@s">
+                                <span class="uk-label">Notes</span><textarea class="uk-textarea" id="ItemNotes${index}" style="height: 105px;">${element.notes}</textarea>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="uk-grid-small" uk-grid>
+                            <div class="uk-width-1-2@s">
+                                <span class="uk-label">Priority</span><br  />
+                                <label><input class="uk-radio" type="radio" name="radio${index}" data-value="0"> Low</label>
+                                <label><input class="uk-radio" type="radio" name="radio${index}" data-value="1"> Normal</label>
+                                <label><input class="uk-radio" type="radio" name="radio${index}" data-value="2"> High</label>
+                            </div>
+                            <div class="uk-width-1-2@s">
+                                <span class="uk-label">Due Date</span><input type="text" id="datepicker${index}" class="uk-input">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="uk-modal-footer">
+                    <p class="uk-align-right"><button id="save${index}" class="uk-button uk-button-primary" type="button" uk-close>Save</button></p>
+                    <p class="uk-align-left"><button id="delete${index}" class="uk-button uk-button-danger" type="button" uk-close>Delete</button></p>
+                </div>
             </div>
-            <p class="uk-text-right"><button id="save${index}" class="uk-button uk-button-primary" type="button">Save</button></p></div></div>
-        `);
+        </div>`);
         
+
+
         
         $(`#save${index}`).click(function(e) {
-            
-            //e.target.parentNode.parentNode.parentNode.remove();
-            UIkit.modal(e.target.parentNode.parentNode.parentNode).hide();
-            $('html').removeAttr('class');
-            $('body').removeAttr('style');
+            //UIkit.modal(e.target.parentNode.parentNode.parentNode).hide();
+            //$('html').removeAttr('class');
+            //$('body').removeAttr('style');
+            //UIkit.modal(e, 'sel-close');
             ToDoArray = editMode(index,ToDoArray); 
             render(ToDoArray);
         });
 
+        $(`#delete${index}`).click(function(e) {
+                e.preventDefault();
+                e.target.blur();
+                UIkit.modal.prompt(`Type <b>"remove"</b> To Remove To-Do Item <b>"${e.target.parentNode.parentNode.parentNode.firstElementChild.textContent}"</b>`, '').then(function (answer) {
+                    if (answer === "remove") {
+                        ToDoArray = deleteMode(index,ToDoArray); 
+                        console.log(ToDoArray);
+                        render(ToDoArray);
+                    }
+                });
+            
+            //UIkit.modal(e.target.parentNode.parentNode.parentNode).hide();
+            //$('html').removeAttr('class');
+            //$('body').removeAttr('style');
+        });
+
+        //match checked attribute with the corresponding element value.
         $(`input[name="radio${index}"][data-value="${parseInt(element.priority)}"]`).prop('checked', true);
+        //Add date picker functionality to all edit modals.
+        $(`#datepicker${index}`).datepicker();
  
     });
 }
@@ -100,13 +144,20 @@ const editMode = (index,arr) => {
     arr[index].title = DOMPurify.sanitize($(`#ItemName${index}`).val(), {ALLOWED_TAGS: ['b']});
     arr[index].description = DOMPurify.sanitize($(`#ItemDescription${index}`).val(), {ALLOWED_TAGS: ['b']});
     arr[index].notes = DOMPurify.sanitize($(`#ItemNotes${index}`).val(), {ALLOWED_TAGS: ['b']});
-    arr[index].editedDate = format(new Date(), 'MM/DD/YYYY h A');
+    arr[index].editedDate = format(new Date(), 'MM/DD/YYYY');
     arr[index].priority = $(`input[name="radio${index}"]:checked`).attr('data-value');
+    arr[index].dueDate = DOMPurify.sanitize($(`#datepicker${index}`).val(), {ALLOWED_TAGS: ['b']});
 
     localStorage.setItem('ToDoArray', JSON.stringify(arr));
     return arr;
 }
 
+const deleteMode = (index,arr) => {
+    arr = arr.splice((index+1),1);
+    
+    localStorage.setItem('ToDoArray', JSON.stringify(arr));
+    return arr;
+}
 
 
 export {render};
