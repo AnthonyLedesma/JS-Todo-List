@@ -1,15 +1,16 @@
 // Whole-script strict mode syntax
 'use strict';
-const $ = require('jquery');
+//const $ = require('jquery');
 
 require("expose-loader?$!jquery");
 
 import {render} from './DisplayController.js';
 
-
+import DOMPurify from 'dompurify';
 import UIkit from 'uikit';
 import Icons from 'uikit/dist/js/uikit-icons';
 import { format } from 'date-fns';
+import datepicker from 'jquery-ui/ui/widgets/datepicker';
 
 // loads the Icon plugin
 UIkit.use(Icons);
@@ -45,12 +46,13 @@ function ToDoItems () {
 
 $('#GenerateButton').click(function() {
     let x = ToDoItems(); 
-    x.title = $('#ItemName').val();
-    x.description = $('#ItemDescription').val();
+    
+    x.title = DOMPurify.sanitize($('#ItemName').val(), {ALLOWED_TAGS: ['b']});
+    x.description = DOMPurify.sanitize($('#ItemDescription').val(), {ALLOWED_TAGS: ['b']});
     x.createdDate = format(new Date(), 'MM/DD/YYYY h A');
     ToDoArray.push(x);
     localStorage.setItem('ToDoArray', JSON.stringify(ToDoArray));
-    $('#NewFormDiv').hide();
+    //$('#NewFormDiv').hide();
     render(ToDoArray);
 })
 
@@ -67,3 +69,7 @@ $('#ClearLocalStorage').click(function() {
     $('#ToDoList').empty();
     ToDoArray = [];
 })
+
+
+$("#datepicker").datepicker();
+  

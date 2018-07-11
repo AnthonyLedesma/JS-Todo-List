@@ -3,10 +3,47 @@
   <head>
     <link rel="stylesheet" href="./css/uikit.min.css">
     <link rel="stylesheet" href="./css/uikit-core.min.css">
+    <link href="./css/jquery-ui-min.css" rel="stylesheet">
     <title>JS Todo List</title>
     <meta charset="UTF-8">  
+    
+    
   </head>
   <body>
+      <nav class="uk-navbar-container" uk-navbar>
+          <div class="uk-navbar-left">
+              <ul class="uk-navbar-nav">
+                  <li class="uk-active"><a href="#NewFormDiv" uk-toggle>New To-Do Item</a></li>
+                  <li class="uk-parent"><a>Completed Items</a></li>
+              </ul>
+          </div>
+      </nav>
+
+      <div id="NewFormDiv" uk-modal>
+          <div class="uk-modal-dialog">
+              
+              <div class="uk-modal-header">
+                <h2 class="uk-modal-title">Add To-Do Item</h2>
+              </div>
+              <div class="uk-modal-body">
+                  <button class="uk-modal-close-default" type="button" uk-close></button>
+                  <form>
+                      Item Title:<br>
+                      <input type="text" name="ItemTitle" id="ItemName" value="New Item Title"><br>
+                      Description:<br>
+                      <input type="text" name="Description" id="ItemDescription" value="Detailed Item Description Here"><br><br>
+                      <p>Due Date: <input type="text" id="datepicker"></p>
+                      
+                    </form> 
+              </div>
+              <div class="uk-modal-footer">
+                  <button id="GenerateButton" class="uk-button uk-button-primary uk-modal-close">Submit</button>
+              </div>
+          </div>
+      </div>
+
+
+
     <div id="ToDoList" class="uk-column-1-2 uk-column-divider">
 
     </div>
@@ -14,22 +51,10 @@
       <ul id="DoneList">
 
       </ul>
-      <button id="NewToDo">New To-Do Item</button>
       <button id="ClearLocalStorage">Clear Local Storage</button>
     </div>
     <div>
-    <div id="NewFormDiv" style="display: none;" class="uk-child-width-1-3@m uk-grid-small uk-grid-match" uk-grid>
-        <div class="uk-card uk-card-default uk-card-body">
-            <h3 class="uk-card-title">Add To-Do Item</h3>
-        <form>
-            Item Title:<br>
-            <input type="text" name="ItemTitle" id="ItemName" value="New Item Title"><br>
-            Description:<br>
-            <input type="text" name="Description" id="ItemDescription" value="Detailed Item Description Here"><br><br>
-            <input type="button" value="Submit" target="#" id="GenerateButton">
-          </form> 
-        </div>
-    </div>
+    
   </div>
     <script src="./main.js"></script>
   </body>

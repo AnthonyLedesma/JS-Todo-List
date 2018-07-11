@@ -3,28 +3,20 @@
 const $ = require('jquery');
 //const jQuery = require('jquery');
 
-$('#ToDoList').append("<li>This item is ToDo</li>");
-$('#DoneList').append("<li>This item is done</li>");
 
 //import ToDoArray from 'index.js';
 import DOMPurify from 'dompurify';
 import UIkit from 'uikit';
 import { format } from 'date-fns';
 
-$('#NewToDo').click(function() {
-    $('#NewFormDiv').show();
-
-})
 
 
 /*
+|Render function will take array containing to-do objects.
+|Objects are read in forEach loop and the data is used with on-the-fly DOM manipulation.
 |
-| 
-|
-|
-|
-|
-|
+|One card and one Modal is rendered with each pass through.
+|Note preRenderClear function will clear DOM elements using jQuery methods.
 */
 const render = (ToDoArray) => {
     let parentClass = "uk-grid-small uk-child-width-expand@s uk-text-center uk-flex";
@@ -86,6 +78,23 @@ const render = (ToDoArray) => {
     });
 }
 
+/*
+|preRenderClear will use jQuery methods to remove the rendered cards and modals.
+*/
+
+const preRenderClear = () => {
+    $('#ToDoList').empty();
+    $('div[data-modal="true"]').remove();
+}
+
+/*
+|editMode is invoked when the save button is clicked on the edit modal.
+|takes the index number of the clicked element and the source ToDo object array.
+|
+|Function will set corresponding object attributes and return the mutated array.
+|Also saves the mutated array to local storage to overwrite unchanged array. 
+*/
+
 const editMode = (index,arr) => {
 
     arr[index].title = DOMPurify.sanitize($(`#ItemName${index}`).val(), {ALLOWED_TAGS: ['b']});
@@ -98,9 +107,6 @@ const editMode = (index,arr) => {
     return arr;
 }
 
-const preRenderClear = () => {
-    $('#ToDoList').empty();
-    $('div[data-modal="true"]').remove();
-}
+
 
 export {render};
