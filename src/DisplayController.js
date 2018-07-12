@@ -12,6 +12,8 @@ const $ = require('jquery');
 import DOMPurify from 'dompurify';
 import UIkit from 'uikit';
 import { format } from 'date-fns';
+import parse from 'date-fns/parse';
+import distanceInWordsToNow from 'date-fns/distance_in_words_to_now';
 
 
 
@@ -41,7 +43,7 @@ const render = (ToDoArray) => {
             <div>
                 <div class="${parentClass}">
                     <div class="${bodyPriorityClass}">
-                        <div id="date-badge-${index}" class="${badgeClass}">Created: ${element.createdDate}<br />Edited: ${element.editedDate}<br  />Due: ${element.dueDate}</div>
+                        <div id="date-badge-${index}" class="${badgeClass}">Created: ${element.createdDate}<br  />Due: ${distanceInWordsToNow(element.dueDate,{addSuffix: true})}</div>
                         <h3 id="item-title-${index}" class="uk-card-title">${element.title}</h3>
                         <p id="description-tag-${index}">${element.description}</p>
                         <p id="notes-tag-${index}">${element.notes}</p>
@@ -89,8 +91,6 @@ const render = (ToDoArray) => {
                 </div>
             </div>
         </div>`);
-        
-
 
         /*
         |Each edit modal will have its own save and delete button. 
@@ -122,6 +122,7 @@ const render = (ToDoArray) => {
         $(`input[name="radio${index}"][data-value="${parseInt(element.priority)}"]`).prop('checked', true);
         //Add date picker functionality to all edit modals.
         $(`#datepicker${index}`).datepicker();
+        
     });
 }
 
@@ -146,9 +147,8 @@ const editMode = (index,arr) => {
     arr[index].title = DOMPurify.sanitize($(`#ItemName${index}`).val(), {ALLOWED_TAGS: ['b']});
     arr[index].description = DOMPurify.sanitize($(`#ItemDescription${index}`).val(), {ALLOWED_TAGS: ['b']});
     arr[index].notes = DOMPurify.sanitize($(`#ItemNotes${index}`).val(), {ALLOWED_TAGS: ['b']});
-    arr[index].editedDate = format(new Date(), 'MM/DD/YYYY');
     arr[index].priority = $(`input[name="radio${index}"]:checked`).attr('data-value');
-    arr[index].dueDate = DOMPurify.sanitize($(`#datepicker${index}`).val(), {ALLOWED_TAGS: ['b']});
+    arr[index].dueDate = format(parse(DOMPurify.sanitize($(`#datepicker${index}`).val(), {ALLOWED_TAGS: ['b']})),'MM/DD/YYYY');
     return arr;
 }
 

@@ -13,7 +13,7 @@ import { render } from './DisplayController.js';
 import 'jquery-ui/ui/widgets/datepicker';
 
 /*
-|UIkit methods allow us to access JS methods to work with CSS framework.
+|UIkit allow us access to JS methods to work with CSS framework.
 |UIkit icons plugin imported then loaded.
 */
 import UIkit from 'uikit';
@@ -31,13 +31,11 @@ if (localStorage.getItem('ToDoArray')) {
 }
 
 /*
-|
 |Factory function ToDoItems will output ToDo list items as objects. 
 |Objects should have the following properties.
 |Title, Description, Creation Date, Due Date, Priority, Notes, and Checklist. 
 |
 |Priority 0-2 | Low to High
-|
 */
 
 function ToDoItems () {
@@ -46,7 +44,6 @@ function ToDoItems () {
         description: '',
         dueDate: '',
         createdDate: '',
-        editedDate: 'N/A',
         priority: 0,
         notes: '',
         checklist: ''
@@ -66,7 +63,7 @@ $('#GenerateButton').click(function() {
     x.title = DOMPurify.sanitize($('#ItemName').val(), {ALLOWED_TAGS: ['b']});
     x.description = DOMPurify.sanitize($('#ItemDescription').val(), {ALLOWED_TAGS: ['b']});
     x.createdDate = format(new Date(), 'MM/DD/YYYY');
-    x.dueDate = format($('#datepicker').val(), 'MM/DD/YYYY');
+    x.dueDate = format(parse(DOMPurify.sanitize($(`#datepicker`).val(), {ALLOWED_TAGS: ['b']})),'MM/DD/YYYY');
     x.priority = $('input[name="newItem"]:checked').attr('data-priority');
     x.notes = DOMPurify.sanitize($('#ItemNotes').val(), {ALLOWED_TAGS: ['b']});
 
