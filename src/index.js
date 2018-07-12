@@ -46,7 +46,10 @@ function ToDoItems () {
         createdDate: '',
         priority: 0,
         notes: '',
-        checklist: ''
+        checklist: {
+            item: '',
+            checked: false
+        }
     };
     return obj;
 }

@@ -32,6 +32,7 @@ const render = (ToDoArray) => {
     let gridClass = "uk-grid-small uk-child-width-expand@s uk-text-center uk-flex";
     let editClass = "uk-button uk-button-text uk-align-right";
 
+
     preRenderClear();
     ToDoArray.forEach((element,index) => {
 
@@ -83,6 +84,16 @@ const render = (ToDoArray) => {
                                 <span class="uk-label">Due Date</span><input type="text" id="datepicker${index}" class="uk-input" value="${element.dueDate}">
                             </div>
                         </div>
+                        <div class="toggleCheckboxes${index}" id="addCheckbox${index}" hidden>
+                        <div class="uk-margin uk-width-1-1">
+                        <div class="uk-inline">
+                            <button class="uk-form-icon" id="submitCheckbox${index}" uk-toggle="target: .toggleCheckboxes${index}" uk-icon="icon: plus-circle"></button>
+                            <input class="uk-input" type="text" id="checkboxName${index}">
+                        </div>
+                        </div> 
+                            
+                        </div>
+                        <div id="checkboxes${index}" class="uk-button uk-button-text toggleCheckboxes${index}" uk-toggle="target: .toggleCheckboxes${index}"> Add Checkbox</div>
                     </form>
                 </div>
                 <div class="uk-modal-footer">
@@ -118,12 +129,25 @@ const render = (ToDoArray) => {
                 });
                 UIkit.modal($(`#modal${index}`)).hide();//Js method enables proper modal functionality with UIkit.
         });
+
+        $(`#checkboxes${index}`).click(function(e) {
+            console.log(e);
+            console.log($(`#checkboxes${index}`));
+            
+        })
         //match checked attribute with the corresponding element value.
         $(`input[name="radio${index}"][data-value="${parseInt(element.priority)}"]`).prop('checked', true);
         //Add date picker functionality to all edit modals.
         $(`#datepicker${index}`).datepicker();
         
     });
+}
+$('#newCheckBox').click(function() {
+
+});
+
+const checkBoxer = () => {
+
 }
 
 /*
