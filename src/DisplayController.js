@@ -1,10 +1,14 @@
-// Whole-script strict mode syntax
+
+/*
+|Whole-script strict mode syntax
+|Require jQuery dependency for proper functionality.
+|DomPurify is used to sanitize user inputs.
+|format is used for date and time manipulation.
+|UIkit methods allow us to access JS methods to work with CSS framework.
+*/
+
 'use strict';
 const $ = require('jquery');
-//const jQuery = require('jquery');
-
-
-//import ToDoArray from 'index.js';
 import DOMPurify from 'dompurify';
 import UIkit from 'uikit';
 import { format } from 'date-fns';
@@ -74,27 +78,31 @@ const render = (ToDoArray) => {
                                 <label><input class="uk-radio" type="radio" name="radio${index}" data-value="2"> High</label>
                             </div>
                             <div class="uk-width-1-2@s">
-                                <span class="uk-label">Due Date</span><input type="text" id="datepicker${index}" class="uk-input">
+                                <span class="uk-label">Due Date</span><input type="text" id="datepicker${index}" class="uk-input" value="${element.dueDate}">
                             </div>
                         </div>
                     </form>
                 </div>
                 <div class="uk-modal-footer">
-                    <p class="uk-align-right"><button id="save${index}" class="uk-button uk-button-primary" type="button" uk-close>Save</button></p>
-                    <p class="uk-align-left"><button id="delete${index}" class="uk-button uk-button-danger" type="button" uk-close>Delete</button></p>
+                    <p class="uk-align-right"><button id="save${index}" class="uk-button uk-button-primary" type="button">Save</button></p>
+                    <p class="uk-align-left"><button id="delete${index}" class="uk-button uk-button-danger" type="button">Delete</button></p>
                 </div>
             </div>
         </div>`);
         
 
 
-        
+        /*
+        |Each edit modal will have its own save and delete button. 
+        |One listener each that will watch for the index and pass along to delete, and edit functions.
+        |
+        |After functions execute, local storage object will be updated to match mutated array.
+        |Each listener should render to display latest changes.
+        */
         $(`#save${index}`).click(function(e) {
-            //UIkit.modal(e.target.parentNode.parentNode.parentNode).hide();
-            //$('html').removeAttr('class');
-            //$('body').removeAttr('style');
-            //UIkit.modal(e, 'sel-close');
+            UIkit.modal($(`#modal${index}`)).hide();//Js method enables proper modal functionality with UIkit.
             ToDoArray = editMode(index,ToDoArray); 
+            localStorage.setItem('ToDoArray', JSON.stringify(ToDoArray));
             render(ToDoArray);
         });
 
@@ -103,22 +111,17 @@ const render = (ToDoArray) => {
                 e.target.blur();
                 UIkit.modal.prompt(`Type <b>"remove"</b> To Remove To-Do Item <b>"${e.target.parentNode.parentNode.parentNode.firstElementChild.textContent}"</b>`, '').then(function (answer) {
                     if (answer === "remove") {
-                        ToDoArray = deleteMode(index,ToDoArray); 
-                        console.log(ToDoArray);
+                        ToDoArray = deleteMode(index,ToDoArray);
+                        localStorage.setItem('ToDoArray', JSON.stringify(ToDoArray));
                         render(ToDoArray);
                     }
                 });
-            
-            //UIkit.modal(e.target.parentNode.parentNode.parentNode).hide();
-            //$('html').removeAttr('class');
-            //$('body').removeAttr('style');
+                UIkit.modal($(`#modal${index}`)).hide();//Js method enables proper modal functionality with UIkit.
         });
-
         //match checked attribute with the corresponding element value.
         $(`input[name="radio${index}"][data-value="${parseInt(element.priority)}"]`).prop('checked', true);
         //Add date picker functionality to all edit modals.
         $(`#datepicker${index}`).datepicker();
- 
     });
 }
 
@@ -138,7 +141,6 @@ const preRenderClear = () => {
 |Function will set corresponding object attributes and return the mutated array.
 |Also saves the mutated array to local storage to overwrite unchanged array. 
 */
-
 const editMode = (index,arr) => {
 
     arr[index].title = DOMPurify.sanitize($(`#ItemName${index}`).val(), {ALLOWED_TAGS: ['b']});
@@ -147,17 +149,19 @@ const editMode = (index,arr) => {
     arr[index].editedDate = format(new Date(), 'MM/DD/YYYY');
     arr[index].priority = $(`input[name="radio${index}"]:checked`).attr('data-value');
     arr[index].dueDate = DOMPurify.sanitize($(`#datepicker${index}`).val(), {ALLOWED_TAGS: ['b']});
-
-    localStorage.setItem('ToDoArray', JSON.stringify(arr));
     return arr;
 }
 
+
+/*
+|Simply mutate source array with splice method 
+|and inserting the index number of the clicked element.
+|retun the mutated array.
+*/
 const deleteMode = (index,arr) => {
-    arr = arr.splice((index+1),1);
-    
-    localStorage.setItem('ToDoArray', JSON.stringify(arr));
+    arr.splice(index,1);
     return arr;
 }
 
-
+//named export for ES6.
 export {render};

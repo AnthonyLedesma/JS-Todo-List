@@ -5,79 +5,58 @@
     <link rel="stylesheet" href="./css/uikit-core.min.css">
     <link href="./css/jquery-ui-min.css" rel="stylesheet">
     <title>JS Todo List</title>
-    <meta charset="UTF-8">  
-    
-    
+    <meta charset="UTF-8">   
   </head>
   <body>
-      <nav class="uk-navbar-container" uk-navbar>
-          <div class="uk-navbar-left">
-              <ul class="uk-navbar-nav">
-                  <li class="uk-active"><a href="#NewFormDiv" uk-toggle>New To-Do Item</a></li>
-                  <li class="uk-parent"><a>Completed Items</a></li>
-              </ul>
-          </div>
-      </nav>
-
-      <div id="NewFormDiv" uk-modal>
-          <div class="uk-modal-dialog">
-              
-              <div class="uk-modal-header">
-                <h2 class="uk-modal-title">Add To-Do Item</h2>
+    <nav class="uk-navbar-container" uk-navbar>
+      <div class="uk-navbar-left">
+        <ul class="uk-navbar-nav">
+          <li class="uk-active"><a href="#NewFormDiv" uk-toggle>New To-Do Item</a></li>
+          <li class="uk-parent"><a>Completed Items</a></li>
+        </ul>
+      </div>
+    </nav>
+    <div id="NewFormDiv" uk-modal>
+      <div class="uk-modal-dialog">
+        <div class="uk-modal-header">
+          <h2 class="uk-modal-title">Add To-Do Item</h2>
+        </div>
+        <div class="uk-modal-body">
+          <button class="uk-modal-close-default" type="button" uk-close></button>
+          <form>
+            <div class="uk-grid-small" uk-grid uk-height-match=".uk-grid-small">
+              <div class="uk-width-1-2@s">
+                <span class="uk-label">Item Title</span>
+                <input type="text" name="ItemTitle" id="ItemName" class="uk-input">
+                <span class="uk-label">Description</span>
+                <input type="text" name="Description" id="ItemDescription" class="uk-input">
               </div>
-              <div class="uk-modal-body">
-                  <button class="uk-modal-close-default" type="button" uk-close></button>
-                  <form>
-                    <div class="uk-grid-small" uk-grid uk-height-match=".uk-grid-small">
-                            <div class="uk-width-1-2@s">
-                        <span class="uk-label">Item Title</span>
-                        <input type="text" name="ItemTitle" id="ItemName" class="uk-input">
-                        <span class="uk-label">Description</span>
-                        <input type="text" name="Description" id="ItemDescription" class="uk-input">
-                            </div>
-                            <div class="uk-width-1-2@s">
-                        <span class="uk-label">Notes</span>
-                        <textarea class="uk-textarea" id="ItemNotes" style="height: 105px;"></textarea>
-                    </div>
-                      </div>
-                      <hr />
-                      <span class="uk-grid-small" uk-grid>
-                      <div class="uk-width-1-2@s">
-                        <span class="uk-label">Priority</span><br  />
-                        <label><input class="uk-radio" type="radio" name="newItem" checked data-priority="0"> Low</label>
-                        <label><input class="uk-radio" type="radio" name="newItem" data-priority="1"> Normal</label>
-                        <label><input class="uk-radio" type="radio" name="newItem" data-priority="2"> High</label>
-                      </div>
-                    
-                      
-                      <span class="uk-width-1-2@s"><span class="uk-label">Due Date</span><input type="text" id="datepicker" class="uk-input"></span>
-                    </span>
-                    
-                    </form> 
-                </div>
-              
-              <div class="uk-modal-footer">
-                  <button id="GenerateButton" class="uk-button uk-button-primary uk-modal-close">Submit</button>
+              <div class="uk-width-1-2@s">
+                <span class="uk-label">Notes</span>
+                <textarea class="uk-textarea" id="ItemNotes" style="height: 105px;"></textarea>
               </div>
             </div>
-          </div>
+            <hr />
+            <span class="uk-grid-small" uk-grid>
+              <div class="uk-width-1-2@s">
+                <span class="uk-label">Priority</span><br  />
+                <label><input class="uk-radio" type="radio" name="newItem" checked data-priority="0"> Low</label>
+                <label><input class="uk-radio" type="radio" name="newItem" data-priority="1"> Normal</label>
+                <label><input class="uk-radio" type="radio" name="newItem" data-priority="2"> High</label>
+              </div>
+              <span class="uk-width-1-2@s"><span class="uk-label">Due Date</span><input type="text" id="datepicker" class="uk-input"></span>
+            </span>
+          </form> 
+        </div>
+        <div class="uk-modal-footer">
+          <button id="GenerateButton" class="uk-button uk-button-primary uk-modal-close">Submit</button>
+        </div>
       </div>
-    
+    </div>
     <div id="modal-overflow"></div>
-
-
-    <div id="ToDoList" class="uk-column-1-2 uk-column-divider">
-
-    </div>
-    <div>
-      <ul id="DoneList">
-
-      </ul>
-      <button id="ClearLocalStorage">Clear Local Storage</button>
-    </div>
-    <div>
+    <div id="ToDoList" class="uk-column-1-2 uk-column-divider"></div>
     
-  </div>
+    <button id="ClearLocalStorage">Clear Local Storage</button>
     <script src="./main.js"></script>
   </body>
 </html>

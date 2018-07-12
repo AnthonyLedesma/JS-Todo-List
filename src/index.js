@@ -1,20 +1,30 @@
-// Whole-script strict mode syntax
+/*
+|Whole-script strict mode syntax.
+|Expose jQuery to global environment.
+|DomPurify is used to sanitize user inputs.
+|format is used for date and time manipulation.
+|load datepicker widget from jQuery UI.
+*/
 'use strict';
-//const $ = require('jquery');
-
 require("expose-loader?$!jquery");
-
-import {render} from './DisplayController.js';
-
 import DOMPurify from 'dompurify';
-import UIkit from 'uikit';
-import Icons from 'uikit/dist/js/uikit-icons';
 import { format } from 'date-fns';
+import { render } from './DisplayController.js';
 import 'jquery-ui/ui/widgets/datepicker';
 
-// loads the Icon plugin
+/*
+|UIkit methods allow us to access JS methods to work with CSS framework.
+|UIkit icons plugin imported then loaded.
+*/
+import UIkit from 'uikit';
+import Icons from 'uikit/dist/js/uikit-icons';
 UIkit.use(Icons);
 
+/*
+|Set ToDoArray as global accessible variable. 
+|Array will contain To-Do list objects.
+|Retrieve array from localStorage if the item exists.
+*/
 let ToDoArray = [];
 if (localStorage.getItem('ToDoArray')) {
     ToDoArray = JSON.parse(localStorage.getItem('ToDoArray'));
@@ -44,9 +54,15 @@ function ToDoItems () {
     return obj;
 }
 
+
+/*
+|Generate button is accessible when NEW TO-DO ITEM menu item is clicked. 
+|Generate button will use the information provided within the Add To-Do Item form located in index.html.
+|Inputs are sanitized and placed into temporary object which is pushed into global ToDoArray.
+|At the end of the click event render is called and form values are set to defaults.
+*/
 $('#GenerateButton').click(function() {
     let x = ToDoItems(); 
-    
     x.title = DOMPurify.sanitize($('#ItemName').val(), {ALLOWED_TAGS: ['b']});
     x.description = DOMPurify.sanitize($('#ItemDescription').val(), {ALLOWED_TAGS: ['b']});
     x.createdDate = format(new Date(), 'MM/DD/YYYY');
@@ -56,7 +72,6 @@ $('#GenerateButton').click(function() {
 
     ToDoArray.push(x);
     localStorage.setItem('ToDoArray', JSON.stringify(ToDoArray));
-    //$('#NewFormDiv').hide();
     render(ToDoArray);
 
     $('#ItemName').val("");
@@ -66,11 +81,18 @@ $('#GenerateButton').click(function() {
     $('input[name="newItem"][data-priority="0"]').prop('checked', true);
 })
 
+/*
+|render is called on initial page load.
+|Initialize datepicker plugin on the Add To-Do Item form.
+*/
 render(ToDoArray);
+$('#datepicker').datepicker();
 
 
-
-
+/*
+|DEV FUNCTION
+|Intended to bypass form restrictions.
+*/
 $('#ClearLocalStorage').click(function() {
     if (localStorage.getItem('ToDoArray')) {
         localStorage.clear();
@@ -80,7 +102,7 @@ $('#ClearLocalStorage').click(function() {
     ToDoArray = [];
 })
 
-$('#datepicker').datepicker();
+
 
   
 
